@@ -1404,10 +1404,23 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
     if (alreadyAnswered && alreadyAnswered.answer) {
       if (Array.isArray(alreadyAnswered.answer)) {
         alreadyAnswered.answer.forEach((answer) => {
-          if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
+          if (
+            !["Banana", "Olive", "Sunflowers", "None of the above"].includes(
+              answer
+            )
+          ) {
             $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
               true,
             ]);
+            $(`#typeSelection button[data-val="${answer}"]`).on(
+              "click",
+              checkAllergie(answer)
+            );
+          } else if (
+            `#typeSelection button[data-val="${answer}"]` ===
+            "None of the above"
+          ) {
+            handleNoneOfTheAbove();
           }
         });
       }
@@ -2072,3 +2085,5 @@ function handleNoneOfTheAbove() {
 function handleImageMissing(self) {
   $(self).addClass("image-missing");
 }
+
+function checkAllergie() {}
