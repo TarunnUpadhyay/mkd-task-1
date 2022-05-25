@@ -1395,32 +1395,25 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
       if (val.answer) {
         $("#typeSelection .answerInner").append(`
           <div class="selectionOptions">
-            <button data-val="${val.answer}" data-id="${val.id}" class="selectionBtns selectionBtn" >${val.answer}</button>
+            <button onclick="checkAllergie()" data-val="${val.answer}" data-id="${val.id}" class="selectionBtns selectionBtn" >${val.answer}</button>
           </div>
         `);
       }
     });
 
+    $("#typeSelection .answerInner").append(`
+          <div class="selectionOptions">
+            <button onclick="handleNoneOfTheAbove()" data-val="none" data-id="" class="selectionBtns selectionBtn" >None of the above</button>
+          </div>
+        `);
+
     if (alreadyAnswered && alreadyAnswered.answer) {
       if (Array.isArray(alreadyAnswered.answer)) {
         alreadyAnswered.answer.forEach((answer) => {
-          if (
-            !["Banana", "Olive", "Sunflowers", "None of the above"].includes(
-              answer
-            )
-          ) {
+          if (!["Banana", "Olive", "Sunflowers"].includes(answer)) {
             $(`#typeSelection button[data-val="${answer}"]`).trigger("click", [
               true,
             ]);
-            $(`#typeSelection button[data-val="${answer}"]`).on(
-              "click",
-              checkAllergie(answer)
-            );
-          } else if (
-            `#typeSelection button[data-val="${answer}"]` ===
-            "None of the above"
-          ) {
-            handleNoneOfTheAbove();
           }
         });
       }
@@ -2085,5 +2078,3 @@ function handleNoneOfTheAbove() {
 function handleImageMissing(self) {
   $(self).addClass("image-missing");
 }
-
-function checkAllergie() {}
