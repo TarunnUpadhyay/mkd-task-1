@@ -1395,7 +1395,7 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
       if (val.answer) {
         $("#typeSelection .answerInner").append(`
           <div class="selectionOptions">
-            <button onclick="checkAllergie()" data-val="${val.answer}" data-id="${val.id}" class="selectionBtns selectionBtn" >${val.answer}</button>
+            <button onclick="checkAllergie('${val.answer}')" data-val="${val.answer}" data-id="${val.id}" class="selectionBtns selectionBtn" >${val.answer}</button>
           </div>
         `);
       }
@@ -1403,7 +1403,7 @@ async function askQuestion(totalQuizQuestions, counter, fromBack) {
 
     $("#typeSelection .answerInner").append(`
           <div class="selectionOptions">
-            <button onclick="handleNoneOfTheAbove()" data-val="none" data-id="" class="selectionBtns selectionBtn" >None of the above</button>
+            <button onclick="handleNoneOfTheAbove()" data-val="" data-id="" class="selectionBtns selectionBtn" >None of the above</button>
           </div>
         `);
 
@@ -2077,4 +2077,53 @@ function handleNoneOfTheAbove() {
 
 function handleImageMissing(self) {
   $(self).addClass("image-missing");
+}
+
+function checkAllergie(val) {
+  const allowedValues = ["Sunflowers", "Olive", "Banana"];
+  if (allowedValues.includes(val)) {
+    terminateQuiz();
+  }
+}
+
+function terminateQuiz() {
+  $("#page3").css("display", "none");
+  $("#page9").css("display", "block");
+
+  var terminationMessage = "";
+  let initialCount = 10;
+
+  //API call to get termination message
+
+  fetch(url_preset + "/api/v1/termination-variables")
+    .then((res) => res.json())
+    .then(function (data) {
+      debugger;
+      terminationMessage = data.data.termination[0].termination_message;
+      initialCount = +data.data.termination[0].termination_counter;
+
+      $("#page9  h4").html(
+        `<span style='text-align:center;'>${terminationMessage}</span>`
+      );
+
+      $("#page9  h1").html(
+        "Quiz will now be Terminated<br><br>" +
+          `<span style='text-align:center;margin-left:1%' id='terminated-counter'>${initialCount}</span>`
+      );
+      setInterval(function () {
+        clearTimeout(timeout);
+        clearTimeout(closeResponseTimeout);
+        if (initialCount == 0) {
+          //redirect to hope page
+          window.location.href = "/";
+        } else {
+          initialCount--;
+          $("#terminated-counter").html(initialCount + "");
+        }
+      }, 1000);
+    })
+    .catch(function (err) {
+      console.warn("Something went wrong.", err);
+      return false;
+    });
 }

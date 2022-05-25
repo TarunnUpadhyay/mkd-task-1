@@ -277,6 +277,16 @@ CREATE TABLE IF NOT EXISTS `email` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
+-- Dumping structure for table mkd.termination_setting
+CREATE TABLE IF NOT EXISTS `termination` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `termination_message` varchar(255) DEFAULT NULL,
+  `termination_counter` int DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4;
+
 -- Dumping data for table mkd.email: ~4 rows (approximately)
 DELETE FROM `email`;
 /*!40000 ALTER TABLE `email` DISABLE KEYS */;
